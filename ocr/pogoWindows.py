@@ -12,6 +12,7 @@ import cv2
 import numpy as np
 from PIL import Image
 import pytesseract
+from multiprocessing.pool import ThreadPool
 
 
 Coordinate = collections.namedtuple("Coordinate", ['x', 'y'])
@@ -27,6 +28,9 @@ class PogoWindows:
             os.makedirs(tempDirPath)
             log.info('PogoWindows: Temp directory created')
         self.tempDirPath = tempDirPath
+
+        log.info("Using threads")
+        self.thread_pool = ThreadPool(processes=3)
 
     def __mostPresentColour(self, filename, maxColours):
         img = Image.open(filename)
@@ -369,8 +373,12 @@ class PogoWindows:
         image = image[int(height / 2 - (height / 3)):int(height / 2 + (height / 3)), 0:int(width)]
         cv2.imwrite(os.path.join(self.tempDirPath, str(hash) + '_AmountOfRaids.jpg'), image)
 
-        if self.__readCircleCount(os.path.join(self.tempDirPath, str(hash) + '_AmountOfRaids.jpg'), hash, 18,
-                                  communicator) > 0:
+        result = self.thread_pool.apply_async(self.__readCircleCount,
+                                              (os.path.join(self.tempDirPath, str(hash) + '_AmountOfRaids.jpg'),
+                                               hash, 18, communicator)).get()
+        # if self.__readCircleCount(os.path.join(self.tempDirPath, str(hash) + '_AmountOfRaids.jpg'), hash, 18,
+        #                           communicator) > 0:
+        if result > 0:
             log.info("readAmountOfRaidsCircle: Raidcircle found, assuming raids nearby")
             os.remove(os.path.join(self.tempDirPath, str(hash) + '_AmountOfRaids.jpg'))
             return True
@@ -383,10 +391,13 @@ class PogoWindows:
     def checkRaidscreen(self, filename, hash, communicator):
         log.debug("checkRaidscreen: Checking if RAID is present (nearby tab)")
 
-        if self.__checkRaidLine(filename, hash, communicator):
+        result = self.thread_pool.apply_async(self.__checkRaidLine, (filename, hash, communicator)).get()
+
+        if result:
             log.debug('checkRaidscreen: RAID-tab found')
             return True
-        if self.__checkRaidLine(filename, hash, communicator, True):
+        result = self.thread_pool.apply_async(self.__checkRaidLine, (filename, hash, communicator, True)).get()
+        if result:
             log.debug('checkRaidscreen: RAID-tab not activated')
             return False
 
@@ -433,9 +444,14 @@ class PogoWindows:
 
         cv2.imwrite(os.path.join(self.tempDirPath, str(hash) + '_exitcircle.jpg'), image)
 
-        if self.__readCircleCount(os.path.join(self.tempDirPath, str(hash) + '_exitcircle.jpg'), hash,
-                                  float(radiusratio), communicator, xcord=False, crop=True, click=True, canny=True) > 0:
-            return True
+        result = self.thread_pool.apply_async(self.__readCircleCount, (os.path.join(self.tempDirPath, str(hash) +
+                                                                       '_exitcircle.jpg'),
+                                                        hash, float(radiusratio), communicator, False, True, True,
+                                                        True)).get()
+        print(result)
+        # if self.__readCircleCount(os.path.join(self.tempDirPath, str(hash) + '_exitcircle.jpg'), hash,
+        #                         float(radiusratio), communicator, xcord=False, crop=True, click=True, canny=True) > 0:
+        return result > 0
 
     # checks for X button on any screen... could kill raidscreen, handle properly
     def checkCloseExceptNearbyButton(self, filename, hash, communicator, closeraid=False):
@@ -537,12 +553,14 @@ class PogoWindows:
         if screenshotRead is None:
             log.error("checkCloseButton: Screenshot corrupted :(")
             return False
-            
-        if self.__readCircleCount(filename, hash,
-                                          float(7.7), communicator, xcord=False, crop=True, click=True, canny=True) > 0:
+
+        result = self.thread_pool.apply_async(self.__readCircleCount, (filename, hash,
+                                          float(7.7), communicator, False, True, True, True)).get()
+        # if self.__readCircleCount(filename, hash,
+        #                              float(7.7), communicator, xcord=False, crop=True, click=True, canny=True) > 0:
+        if result > 0:
             log.debug("Found close button (X). Closing the window - Ratio: 10")
             return True
-
         if self.__checkClosePresent(filename, hash, 10, False):
             log.debug("Found close button (X). Closing the window - Ratio: 10")
             return True
@@ -561,5 +579,4 @@ class PogoWindows:
         else:
             log.debug("Could not find close button (X).")
             return False
-            
-    
+
