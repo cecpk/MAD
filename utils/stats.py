@@ -310,7 +310,7 @@ class PlayerStats(object):
                 for mon_id in data[102]['mon_iv']:
                     type_id = str(mon_id)
                     type_count = int(data[102]['mon_iv'][mon_id])
-                    shiny = int(data[102]['mon_iv'][str(encounter_id) + "_shiny"])
+                    shiny = int(data[102]['mon_iv'][str(mon_id) + "_shiny"])
 
                     data_location_raw.append((str(self._id),
                                              str(type_id),
