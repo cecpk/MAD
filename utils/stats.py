@@ -133,7 +133,7 @@ class PlayerStats(object):
     
             if encounter_id not in self.__stats_collected[102]['mon_iv']:
                 self.__stats_collected[102]['mon_iv'][encounter_id] = 1
-                self.__stats_collected[102]['mon_iv'][encounter_id]['shiny'] = shiny
+                self.__stats_collected[102]['mon_iv'][encounter_id + "_shiny"] = shiny
                 self.__stats_collected[102]['mon_iv_count'] += 1
             else:
                 self.__stats_collected[102]['mon_iv'][encounter_id] += 1
@@ -310,7 +310,7 @@ class PlayerStats(object):
                 for mon_id in data[102]['mon_iv']:
                     type_id = str(mon_id)
                     type_count = int(data[102]['mon_iv'][mon_id])
-                    shiny = int(data[102]['mon_iv'][mon_id]['shiny'])
+                    shiny = int(data[102]['mon_iv'][mon_id + "_shiny"])
 
                     data_location_raw.append((str(self._id),
                                              str(type_id),
