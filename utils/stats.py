@@ -74,7 +74,7 @@ class PlayerStats(object):
         data_send_location = []
 
         if not self._stats_collector_start:
-            if time.time() - self._last_processed_timestamp > 600:
+            if time.time() - self._last_processed_timestamp > 20:
 
                 # collect_data = self._stats_collect.get(self._last_processed_timestamp, [])
 
@@ -132,11 +132,12 @@ class PlayerStats(object):
                 self.__stats_collected[102]['mon_iv_count'] = 0
     
             if encounter_id not in self.__stats_collected[102]['mon_iv']:
-                self.__stats_collected[102]['mon_iv'][encounter_id] = 1
-                self.__stats_collected[102]['mon_iv'][str(encounter_id) + "_shiny"] = shiny
+                self.__stats_collected[102]['mon_iv'][encounter_id] = {}
+                self.__stats_collected[102]['mon_iv'][encounter_id]['count'] = 1
+                self.__stats_collected[102]['mon_iv'][encounter_id]['shiny'] = shiny
                 self.__stats_collected[102]['mon_iv_count'] += 1
             else:
-                self.__stats_collected[102]['mon_iv'][encounter_id] += 1
+                self.__stats_collected[102]['mon_iv'][encounter_id]['count'] += 1
 
     def stats_collect_raid(self, gym_id: str):
         with self.__mapping_mutex:
@@ -309,8 +310,8 @@ class PlayerStats(object):
             if 'mon_iv' in data[102]:
                 for mon_id in data[102]['mon_iv']:
                     type_id = str(mon_id)
-                    type_count = int(data[102]['mon_iv'][mon_id])
-                    shiny = int(data[102]['mon_iv'][str(mon_id) + "_shiny"])
+                    type_count = int(data[102]['mon_iv'][mon_id]['count'])
+                    shiny = int(data[102]['mon_iv'][mon_id]["shiny"])
 
                     data_location_raw.append((str(self._id),
                                              str(type_id),
