@@ -5,123 +5,158 @@
 # A different config-files can be included directly in processes by "--config" or "-cf" and path
 # Value without # are needed for this script
 
-# MySql Settings
+# MySQL Settings
 ######################
+# You really need to fill those. Most of the times you want to have frontend (RM/PMSF) already installed before running MAD.
+# You need to have MySQL Database and User/Grants already created!
+# If you just need clean schema take a look at scripts/SQL/rocketmap.sql
+#dbip:                      # IP or hostname of MySql Server
+#dbport:                    # Port of the database (Default: 3306)
+#dbusername:                # Username for MySQL login
+#dbpassword:                # Password for MySQL login
+#dbname:                    # Name of MySQL Database
+#db_poolsize:               # Size of MySQL pool (open connections to DB). Default: 2.
 
-# if you intend to use the priority queue functionality these settings are required
-#db_method:                  # The DB scheme to use. Either "monocle" or "rm" (without the quotes)
-
-#dbip:                       # IP adress or hostname of the mysql server
-#dbusername:                 # Username of database
-#dbpassword:                 # Password of database
-#dbname:                     # Name of the database
-#dbport:                     # Port of the database (Default: 3306)
-#db_poolsize:                # Amount of connections to keep open to the DB. Default: 2
 
 # Websocket Settings (RGC receiver)
 ######################
-
-#ws_ip:                     # IP for websockt to listen on (for RGC). Default: 0.0.0.0'
+#ws_ip:                     # IP for websocket to listen on. Default: 0.0.0.0
 #ws_port:                   # Port of the websocket to listen on. Default: 8080
-#websocket_command_timeout:         # The max time to wait for a command to return (in seconds). Default: 30 seconds.
+#websocket_command_timeout: # The max time to wait for a command to return (in seconds). Default: 30 seconds
 
-# MITM Receiver (Pogodroid data)
+
+# MITM Receiver (PD receiver)
 ######################
-
-#mitmreceiver_ip:           # IP to listen on for proto data (MITM data). Default: 0.0.0.0 (every interface).
-#mitmreceiver_port:         # Port to listen on for proto data (MITM data). Default: 8000.
+#mitmreceiver_ip:           # IP to listen on for proto data (MITM data). Default: 0.0.0.0
+#mitmreceiver_port:         # Port to listen on for proto data (MITM data). Default: 8000
 #mitmreceiver_data_workers: # Amount of workers to work off the data that queues up. Default: 2
+#mitm_ignore_pre_boot       # Ignore MITM data having a timestamp pre MAD's startup time
+#mitm_status_password:      # Header Authorization password for MITM /status/ page
+
 
 # Walk Settings
 ######################
+#enable_worker_specific_extra_start_stop_handling # Option to enable/disable extra handling for the start/stop routine of workers. Default: False
+#maximum_valid_distance       # The maximum distance for a scan of a location to be considered a valid/correct scan of that location in meters. Default: 50m
 
-#initial_restart:            # Initial Pogo restart when scanner starts. (Default: true)
-#delay_after_hatch:          # Delay in minutes to wait before moving to the location of a hatched egg. Raidbosses do not necessarily appear immediately. (Default: 3.5)
 
-# Runtype settings
+# Job Processor
 ######################
+#job_dt_wh                    # Send job status to discord (Default: False). Default: False
+#job_dt_wh_url:               # Discord Webhook URL for job messages
+#job_dt_send_type:            # Kind of Job Messages to send - separated by pipe | (Default: SUCCESS|FAILURE|NOCONNECT|TERMINATED)
+#job_restart_notconnect:      # Restart job if device is not connected (in minutes). Default: 0 (Off)
+#job_thread_count:            # Amount of threads to work off the device jobs. Default: 1
 
-#only_scan                   # running this instance in scanning mode without OCR tracing
-#only_ocr                    # running this instance in ocr mode without Scanning
-#ocr_multitask               # running OCR as multiprocessing task
-#ocr_thread_count:           # amount of processes/threads to run analysis with
-#no_ocr                      # activate this if you dont want to use mode ocr_raid or questscanner
 
-# path settings
+# Runtypes
 ######################
+#only_scan                    # Use this instance only for scanning. Default: True
+#ocr_thread_count             # Amount of threads/processes to be used for screenshot-analysis. Default: 2
+#only_routes                  # Only calculate routes, then exit the program. No scanning. Default: False
+#config_mode                  # Run in ConfigMode. Default: False
+#status-name:                 # Setup name for this instance - if not set: PID of the process will be used
+#no_event_checker             # Disable event checker task
 
-pogoasset:                   # Path to Pogo Assets: See: https://github.com/ZeChrales/PogoAssets/ (git clone)
+
+# Path Settings
+######################
 #temp_path:                  # Path for generated files while detecting raids (Default: temp/)
-#raidscreen_path:            # Path for taken screenshots (Default: ocr/screenshots/)
-#unknown_path:               # Path for not automaticly detected gyms or mons (Default: unknown/)
+#upload_path:                # Path for uploaded Files via madmin and for device installation. (Default: upload/)
 #file_path:                  # Defines directory to save worker stats- and position files and calculated routes (Default: files/)
+#mappings:                   # optional: defines the path of the mappings file (Default: configs/mappings.json)
+
 
 # other settings
 ######################
-
-#cleanup_age:                # Delete Screenshots older than X minutes (Default: 1440. 0 to disable)
-#last_scanned                # Submit last scanned locations to RM database (if your fork support this!)
-#npValue:                    # Matching Zoom - Max Value (Default: 0.5 [for width = 720px]. 1.5 for width = 1080px)
-#npFrom:                     # Matching Zoom - Start Value (Default: 0.2 [for width = 720px]. 0.5 for width = 1080px)
-#gym_scan_distance:          # Distance of scanned Gyms (Default: 6) - reduce if you scan an area with many gyms at one place
 #weather                     # Detect weather - if your frontend support this!
-#route_file:                 # Filename for Route Cache without extension (Default: route)
 #home_lat:                   # Center Lat of your scan location (Default: 0.0)
 #home_lng:                   # Center Lng of your scan location (Default: 0.0)
-#use_media_projection        # Use Mediaprojection for transfering images (OCR)
-#language:                   # Language for quests (default:en - others: de (more soon))
+#language:                   # Language for several things like quests or mon names in the IV list (default:en - others: de, fr )
 
-# MADmin statistics
-######################
-#statistic                   # Activate system statistics
-#status-name:                # Setup name for this instance - if not set: PID of the process will be used
-#stat_gc                     # Enable statistics for collected object (garbage collector) - if you really need this info
-#statistic_interval:         # Update interval for the usage generator in seconds (Default: 60)
-
-# ADB
-#use_adb                      # Use ADB for phonecontrol (Default: False')
-#adb_server_ip:               # IP address of ADB server (Default: 127.0.0.1)
-#adb_server_port:             # Port of ADB server (Default: 5037)
 
 # MADmin
 ######################
-#with_madmin                 # Start Madmin
-#madmin_sort:                # MADmin sort column Raid/Gym (5= Modify / 6 = Create) (Default: 6)
+#disable_madmin              # Disable Madmin on the instance
+#madmin_base_path            # Base path for madmin
 #madmin_ip:                  # MADmin listening interface (Default: 0.0.0.0)
-#madmin_port:                # MADmin web port (Default: 5000)
+#madmin_port:                # Highly recommended to change. MADmin web port (Default: 5000)
+#madmin_user:                # MADmin username for login
+#madmin_password:            # MADmin password for login
+#madmin_sort:                # MADmin sort column Raid/Gym (5= Modify / 6 = Create) (Default: 6)
 #madmin_time:                # MADmin clock format (12/24) (Default: 24)
 #madmin_noresponsive         # MADmin deactivate responsive tables
-#unknown_gym_distance:       # MADmin show matchable gyms with this radius (Default: 10)
-#madmin_user: madmin         # MADmin username for login
-#madmin_password: MySecret   # MADmin password for login
+#quests_public               # Enables MADmin /quests_pub, /get_quests, and pushassets endpoints for public quests overview
+#outdated_spawnpoints:       # Define when a spawnpoint is out of date (in days). Default: 3.
+#quest_stats_fences:         # Comma separated list of geofences names to use for Quest/Stop Stats page (Empty: all)
 
-# webhook
+
+# Statistics
 ######################
+#statistic                   # Activate system statistics
+#stat_gc                     # Enable statistics for collected object (garbage collector) - if you really need this info
+#statistic_interval:         # Update interval for the usage generator in seconds (Default: 60)
 
+
+# Game Stats
+######################
+#game_stats                  # Generate worker stats
+#game_stats_raw              # Generate worker raw stats (only with --game_stats)')
+#game_stats_save_time        # Number of seconds until worker information is saved to database (Default: 300)
+#raw_delete_shiny:           # Delete shiny mon in raw stats older then x days (0 =  Disable (Default))
+
+
+# ADB
+######################
+#use_adb                     # Use ADB for "device control" (Default: False)
+#adb_server_ip:              # IP address of ADB server (Default: 127.0.0.1)
+#adb_server_port:            # Port of ADB server (Default: 5037)
+
+
+# Webhook
+######################
 #webhook                     # Activate support for webhook
 #webhook_url:                # webhook endpoint (multiple seperated by comma)
                              #  use [<type>] in front of the url, if you want to split data between multiple endpoints. Ex: [pokemon]http://foo.com,[raid]http://bar.com
-                             #  possible types are: pokemon, raid, gym, weather
+                             #  possible types are: pokemon, raid, gym, weather, pokestop, quest
 #webhook_submit_exraids      # Send Ex-raids to the webhook if detected
-#weather_webhook             # Activate support for weather webhook
-#pokemon_webhook             # Activate support for pokemon webhook
-#gym_webhook                 # Activate support for gym webhook (NOT required for raids!)
-#quest_webhook               # Activate support for quest webhook
+#webhook_excluded_areas      # Comma-separated list of area names to exclude elements from within an area to be sent to a webhook.
+#pokemon_webhook_nonivs      # By default MAD will not send mons without IV checked if they are on ANY Global Mon List. Enable this to have them (sometimes) send twice
+                             # once without IV, once with IV. Make sure your webhook reciever can work with the same encounter send twice [e.g. PokeAlarm needs dev branch]
+#quest_webhook_flavor:       # Mode for quest webhooks (default or poracle)
+#webhook_start_time          # Debug: Set initial timestamp to fetch changed elements from the DB to send via WH.
+#webhook_max_payload_size    # Split up the payload into chunks and send multiple requests. Default: 0 (unlimited)
+
 
 # Dynamic Rarity
 ######################
-
 #rarity_hours:               # Set the number of hours for the calculation of pokemon rarity (Default: 72)
 #rarity_update_frequency:    # Update frequency for dynamic rarity in minutes (Default: 60)
 
-# Auto Hatch
-######################
-#auto_hatch                  # Activate auto hatch of level 5 eggs
-#auto_hatch_number           # Auto hatch of level 5 Pokemon ID
 
 # Logging
 ######################
-#no-file-logs                # Disable logging (Default: disable)
-#log-path:                   # Path for Logs (Default: logs/)
-#log-filename:               # Filename for logs (Default: Default: %%Y%%m%%d_%%H%%M_<SN>.log)
-#cleanup-age:                # Delete logs older than X minutes (Default: 0. 0 = disable)
+#no_file_logs                # Disable file logging (Default: file logging is enabled by default)
+#log_path:                   # Defines directory to save log files to (Default: logs/)
+#log_filename:               # Defines the log filename to be saved. Allows date formatting, and replaces <SN>
+                             #  with the instance's status name (Default: Default: %Y%m%d_%H%M_<SN>.log)
+#log_file_rotation:          # This parameter expects a human-readable value like '18:00', 'sunday', 'weekly', 'monday
+                             #  at 12:00' or a maximum file size like '100 MB' or '0.5 GB'. Set to '0' to disable completely. (Default: 50 MB)
+#log_level:                  # Forces a certain log level. By default by the -v command to show DEBUG logs.
+                             # Custom log levels like DEBUG[1-5] can be used too
+#log_file_level              # File logging level. See description for --log_level.
+#log_file_retention          # mount of days to keep file logs. Set to 0 to keep them forever (Default: 10)
+#no_log_colors               # Disable colored logs.
+
+
+# MADAPKs
+######################
+#token_dispenser:           # Path to token dispenser config (MAD-provided)
+#token_dispenser_user:      # Path to token dispenser config (User-provided)
+#gmail_user:                # Email address if not using a token dispenser
+#gmail_passwd:              # Google Mail Password for interacting with the Google Play Store.  Must be an app password or 2fa will be triggered (this should be enabled on your account anyways')
+
+
+# Auto-Config
+######################
+#autoconfig_no_auth          # MAD PoGo auth is not required during autoconfiguration
