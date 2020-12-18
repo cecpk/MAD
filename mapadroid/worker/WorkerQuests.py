@@ -543,6 +543,7 @@ class WorkerQuests(MITMBase):
         return False, False
 
     def _try_to_open_pokestop(self, timestamp: float) -> LatestReceivedType:
+        return LatestReceivedType.STOP
         to = 0
         type_received: LatestReceivedType = LatestReceivedType.UNDEFINED
         proto_entry = None
