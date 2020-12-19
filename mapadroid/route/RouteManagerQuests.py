@@ -227,6 +227,7 @@ class RouteManagerQuests(RouteManagerBase):
         if self.init:
             self.logger.debug('Init Mode - coord is valid')
             return True
+        return True
         stop = Location(lat, lng)
         self.logger.info('Checking Stop with ID {}', stop)
         if stop not in self._stoplist and stop not in self._coords_to_be_ignored:
