@@ -678,6 +678,7 @@ class WorkerQuests(MITMBase):
                 if not on_main_menu:
                     self._restart_pogo(mitm_mapper=self._mitm_mapper)
                 self._stop_process_time = math.floor(time.time())
+                return
                 if self._try_to_open_pokestop(self._stop_process_time) == LatestReceivedType.UNDEFINED:
                     return
             elif (type_received == LatestReceivedType.FORT_SEARCH_RESULT
