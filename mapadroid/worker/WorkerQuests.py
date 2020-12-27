@@ -648,15 +648,15 @@ class WorkerQuests(MITMBase):
                     self.logger.info('Received new Quest')
                     self._latest_quest = math.floor(time.time())
 
-
             elif (type_received == LatestReceivedType.FORT_SEARCH_RESULT
                     and (data_received == FortSearchResultTypes.TIME
                          or data_received == FortSearchResultTypes.OUT_OF_RANGE)):
                 self.logger.warning('Softban - return to main screen and open again...')
-                on_main_menu = self._check_pogo_main_screen(10, False)
-                if not on_main_menu:
-                    self._restart_pogo(mitm_mapper=self._mitm_mapper)
+                # on_main_menu = self._check_pogo_main_screen(10, False)
+                # if not on_main_menu:
+                #    self._restart_pogo(mitm_mapper=self._mitm_mapper)
                 self._stop_process_time = math.floor(time.time())
+                time.sleep(30)
                 return
                 if self._try_to_open_pokestop(self._stop_process_time) == LatestReceivedType.UNDEFINED:
                     return
