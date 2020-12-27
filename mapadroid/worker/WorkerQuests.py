@@ -680,8 +680,6 @@ class WorkerQuests(MITMBase):
                 if to > 2 and self._db_wrapper.check_stop_quest(self.current_location.lat,
                                                                 self.current_location.lng):
                     self.logger.info('Quest is done without us noticing. Getting new Quest...')
-                    if not self._enhanced_mode:
-                        # self.clear_thread_task = ClearThreadTasks.QUEST
                     break
                 elif to > 2 and self._level_mode and self._mitm_mapper.get_poke_stop_visits(
                         self._origin) > 6800:
