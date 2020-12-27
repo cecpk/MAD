@@ -178,6 +178,10 @@ class RouteManagerQuests(RouteManagerBase):
                     self._route: List[Location] = []
                     return False
 
+                self._init_route_queue()
+                self.logger.info('Getting {} positions in route', len(self._route))
+                return True
+
                 if 0 < len(stops) < len(self._route) \
                         and len(stops) / len(self._route) <= 0.3:
                     # Calculating new route because 70 percent of stops are processed
